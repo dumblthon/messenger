@@ -1,0 +1,4 @@
+rootProject.name = 'messenger'
+
+include 'common'
+include 'sub_module'
