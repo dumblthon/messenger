@@ -1,8 +1,15 @@
+plugins {
+	id 'application'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
 group = 'com.dumblthon.messenger'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-compile project(':common')
 mainClassName = 'sub_module.SubModuleApplication'
 
 dependencies {
@@ -10,6 +17,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	compile project(':common')
 }
 
 test {
