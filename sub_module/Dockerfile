@@ -22,8 +22,10 @@ USER spring:spring
 # Accepts default value
 ARG JAR_FILE=build/libs/*.jar
 
+WORKDIR /opt/app
+
 # Copies new files to the filesystem of the container
-COPY ${JAR_FILE} /app.jar
+COPY ${JAR_FILE} app.jar
 
 # An environment variable that can be passed via
 #    docker run -e "<env_varname>=<value>"
@@ -60,8 +62,8 @@ EXPOSE 8080
 ENTRYPOINT ["java", \
          "-jar", \
          "-Dapplication.logpath=${LOG_PATH}", \
-#         "-Dspring.profiles.active=${PROFILE}", \
+         "-Dspring.profiles.active=${PROFILE}", \
          "-Xms512M", \
          "-Xmx4096M", \
-         "/app.jar"]
+         "app.jar"]
 #CMD
