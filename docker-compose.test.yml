@@ -1,0 +1,41 @@
+version: '3.8'
+#networks:
+#  messenger-net:
+#    external:
+#      name: "host"
+services:
+  sub_module:
+    image: training:0.0.1
+    container_name: sub_module
+#    deploy:
+#      mode: global
+#    restart: always
+#    networks:
+#      - messenger-net
+    environment:
+      PROFILE: test
+      TZ: Europe/Moscow
+    ports:
+      - target: 8080
+        published: 80
+        protocol: tcp
+        mode: host
+#    ports:
+#      - "80:8080"
+    volumes:
+      - ~/sub_module/logs:/log
+      - ~/sub_module/config:/config
+    configs:
+      - source: sub_module-bootstrap
+        target: /config/bootstrap.yml
+      - source: sub_module-config
+        target: /config/application.yml
+      - source: sub_module-logback
+        target: /config/logback-spring.xml
+configs:
+  sub_module-bootstrap:
+    file: sub_module/config/bootstrap.yml
+  sub_module-config:
+    file: sub_module/config/application.yml
+  sub_module-logback:
+    file: sub_module/config/logback-spring.xml
