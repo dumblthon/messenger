@@ -66,4 +66,3 @@ ENTRYPOINT ["java", \
          "-Xms512M", \
          "-Xmx4096M", \
          "app.jar"]
-#CMD

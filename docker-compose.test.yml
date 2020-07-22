@@ -11,11 +11,12 @@ volumes:
   mongo-log:
   postgres-data:
   postgres-log:
+  pgadmin-data:
+  pgadmin-servers:
 services:
   mongo:
     image: mongo:${MONGO_VERSION}
     container_name: mongo
-    hostname: mongo
     networks:
       - messenger-net
     volumes:
@@ -23,7 +24,7 @@ services:
       - mongo-config:/data/configdb
       - mongo-log:/var/log/mongodb
     env_file:
-      - mongodb/mongo-test.env
+      - mongodb/mongo-${PROFILE}.env
   mongo_express:
     image: mongo-express:${MONGO_EXPRESS_VERSION}
     container_name: mongo_express
@@ -31,7 +32,9 @@ services:
       - messenger-net
     ports:
       - "${MONGO_EXPRESS_HOST_PORT}:8081"
-  postgres: # also hostname
+    depends_on:
+      - "mongo"
+  postgres:
     image: postgres:${POSTGRES_VERSION}
     container_name: postgres
     networks:
@@ -39,8 +42,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - postgres-log:/var/log/postgresql
+      - ./postgresql/init:/docker-entrypoint-initdb.d
     env_file:
-      - postgresql/postgres-test.env
+      - postgresql/postgres-${PROFILE}.env
   pgadmin:
     image: dpage/pgadmin4:${PGADMIN_VERSION}
     container_name: pgadmin4
@@ -49,21 +53,19 @@ services:
       - messenger-net
     ports:
       - "${PGADMIN_HOST_PORT}:80"
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin
+    - pgadmin-servers:/pgadmin4/servers.json
     env_file:
-      - postgresql/pgadmin-test.env
+      - postgresql/pgadmin-${PROFILE}.env
   sub_module:
     image: training:${SUB_MODULE_VERSION}
     container_name: sub_module
     build:
       context: ./sub_module
-#      dockerfile: Dockerfile
-#      args:
-#        JAR_FILE: /build/libs/sub-module-${SUB_MODULE_VERSION}.jar
     environment:
-      PROFILE: test
-      TZ: Europe/Moscow
-      POSTGRES_URL: jdbc:postgresql://postgres:5432/test_db
-      MONGO_URL: mongodb://mongo:27017/test_db
+      PROFILE: ${PROFILE}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/submodule
     networks:
       - messenger-net
     ports:
@@ -75,5 +77,4 @@ services:
       - ~/sub_module/logs:/log
       - ~/sub_module/config:/config
     depends_on:
-      - 'mongo'
       - 'postgres'
