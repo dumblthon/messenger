@@ -1,41 +1,79 @@
+# docker-compose -f docker-compose.test.yml --env-file docker-test.env up / down
+
 version: '3.8'
-#networks:
-#  messenger-net:
-#    external:
-#      name: "host"
+networks:
+  messenger-net:
+    name: messenger-net
+    driver: bridge
+volumes:
+  mongo-data:
+  mongo-config:
+  mongo-log:
+  postgres-data:
+  postgres-log:
 services:
+  mongo:
+    image: mongo:${MONGO_VERSION}
+    container_name: mongo
+    hostname: mongo
+    networks:
+      - messenger-net
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+      - mongo-log:/var/log/mongodb
+    env_file:
+      - mongodb/mongo-test.env
+  mongo_express:
+    image: mongo-express:${MONGO_EXPRESS_VERSION}
+    container_name: mongo_express
+    networks:
+      - messenger-net
+    ports:
+      - "${MONGO_EXPRESS_HOST_PORT}:8081"
+  postgres: # also hostname
+    image: postgres:${POSTGRES_VERSION}
+    container_name: postgres
+    networks:
+      - messenger-net
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-log:/var/log/postgresql
+    env_file:
+      - postgresql/postgres-test.env
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: pgadmin4
+    restart: always
+    networks:
+      - messenger-net
+    ports:
+      - "${PGADMIN_HOST_PORT}:80"
+    env_file:
+      - postgresql/pgadmin-test.env
   sub_module:
-    image: training:0.0.1
+    image: training:${SUB_MODULE_VERSION}
     container_name: sub_module
-#    deploy:
-#      mode: global
-#    restart: always
-#    networks:
-#      - messenger-net
+    build:
+      context: ./sub_module
+#      dockerfile: Dockerfile
+#      args:
+#        JAR_FILE: /build/libs/sub-module-${SUB_MODULE_VERSION}.jar
     environment:
       PROFILE: test
       TZ: Europe/Moscow
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/test_db
+      MONGO_URL: mongodb://mongo:27017/test_db
+    networks:
+      - messenger-net
     ports:
       - target: 8080
         published: 80
         protocol: tcp
         mode: host
-#    ports:
-#      - "80:8080"
     volumes:
       - ~/sub_module/logs:/log
       - ~/sub_module/config:/config
-    configs:
-      - source: sub_module-bootstrap
-        target: /config/bootstrap.yml
-      - source: sub_module-config
-        target: /config/application.yml
-      - source: sub_module-logback
-        target: /config/logback-spring.xml
-configs:
-  sub_module-bootstrap:
-    file: sub_module/config/bootstrap.yml
-  sub_module-config:
-    file: sub_module/config/application.yml
-  sub_module-logback:
-    file: sub_module/config/logback-spring.xml
+    depends_on:
+      - 'mongo'
+      - 'postgres'

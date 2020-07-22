@@ -1,32 +1,16 @@
 # docker build -t training:0.0.1 .
-# docker run --name test-module -p 80:8080 training:0.0.1
+# docker run -p 80:8080 training:0.0.1
 
 # Sets the base image for subsequent instructions
 # A valid Dockerfile must start with a FROM
 # Only ARG may precede this instruction
-#FROM openjdk:8-jdk-alpine
-#FROM postgres:12
-# https://hub.docker.com/_/postgres
-# Postgres Dockerfile
-# https://github.com/docker-library/postgres/blob/88173efa530f1a174a7ea311c5b6ee5e383f68bd/12/Dockerfile
-# Run with -e POSTGRES_PASSWORD=<password> -p <host_port>:5432
+FROM openjdk:8-jdk-alpine
 
-#ARG POSTGRES_PASSWORD=testpswd
-#RUN /docker-entrypoint.sh
+# Adds metadata to an image, can be viewed via
+#    docker image inspect --format='' <myimage>
+LABEL description="Training Dockerfile"
 
-FROM postest:12
-
-USER root
-
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install default-jre-headless && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN addgroup spring && adduser --ingroup spring --gecos "" --disabled-password spring
-COPY --chown=spring:spring entrypoint.sh /usr/local/bin/
-
+RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
 # A build-time variable that can be passed via
@@ -75,4 +59,11 @@ EXPOSE 8080
 #    - does not receive Unix signals
 #    - ignores any CMD or docker run command line arguments
 # Only the last ENTRYPOINT instruction will have an effect
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["java", \
+         "-jar", \
+         "-Dapplication.logpath=${LOG_PATH}", \
+         "-Dspring.profiles.active=${PROFILE}", \
+         "-Xms512M", \
+         "-Xmx4096M", \
+         "app.jar"]
+#CMD
