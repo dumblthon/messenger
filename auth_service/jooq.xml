@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.13.0.xsd">
+    <logging>INFO</logging>
+
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5454/test</url>
+        <user>test</user>
+        <password>test</password>
+    </jdbc>
+
+    <generator>
+        <database>
+            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+            <includes>.*</includes>
+            <inputSchema>user_info</inputSchema>
+
+            <forcedTypes>
+                <forcedType>
+                    <userType>java.util.Date</userType>
+                    <includeTypes>timestamp.*</includeTypes>
+                    <converter>com.dumblthon.messenger.auth.repository.converter.LocalDateTimeToDateConverter</converter>
+                </forcedType>
+            </forcedTypes>
+        </database>
+
+        <generate>
+            <records>true</records>
+            <interfaces>true</interfaces>
+        </generate>
+
+        <target>
+            <packageName>com.dumblthon.messenger.auth.userinfo</packageName>
+            <directory>build/generated/jooq/src/main/java</directory>
+        </target>
+    </generator>
+</configuration>
