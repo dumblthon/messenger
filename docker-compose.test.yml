@@ -28,10 +28,13 @@ services:
   mongo_express:
     image: mongo-express:${MONGO_EXPRESS_VERSION}
     container_name: mongo_express
+    restart: always
     networks:
       - messenger-net
     ports:
       - "${MONGO_EXPRESS_HOST_PORT}:8081"
+    env_file:
+      - mongodb/mongo_express-${PROFILE}.env
     depends_on:
       - "mongo"
   postgres:
