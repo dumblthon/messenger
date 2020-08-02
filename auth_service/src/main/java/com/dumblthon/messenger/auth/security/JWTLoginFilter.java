@@ -2,7 +2,6 @@ package com.dumblthon.messenger.auth.security;
 
 import com.dumblthon.messenger.auth.model.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final String jwtSecret;
@@ -39,7 +37,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+                                            Authentication auth) {
         new TokenAuthenticationHelper(jwtSecret).addAuthentication(
                 res, (UserInfo) auth.getPrincipal(), auth.getAuthorities(), ttl_msec);
     }
@@ -48,7 +46,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);
-        log.info("Login Failed ({})", failed.getMessage());
+        //log.info("Login Failed ({})", failed.getMessage());
     }
 
     @SuppressWarnings("unused")

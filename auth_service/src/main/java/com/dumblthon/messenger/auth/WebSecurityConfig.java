@@ -1,22 +1,18 @@
 package com.dumblthon.messenger.auth;
 
-import com.dumblthon.messenger.auth.security.JWTAuthenticationFilter;
-import com.dumblthon.messenger.auth.security.JWTLoginFilter;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @SuppressWarnings("unused")
-@Slf4j
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -28,6 +24,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.app.cors.origin}")
     public String corsOrigin;
+
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -41,26 +43,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);;
+//    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors()
+        http.cors()
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/gettoken").permitAll()
+//                .antMatchers("/","/aboutus").permitAll()
+//                .antMatchers("/admin/**").hasAnyRole("ADMIN")
+//                .antMatchers("/user/**").hasAnyRole("USER")
+                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .loginPage("/login")  //Loginform all can access ..
+//                .defaultSuccessUrl("/dashboard")
+//                .failureUrl("/login?error")
+//                .permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/api/logout")
-                .deleteCookies("COOKIE-BEARER")
-                .logoutSuccessHandler(
-                        (httpServletRequest, httpServletResponse, authentication) -> log.info("Logout Successful"))
+                .logoutUrl("/logout")
+//                .deleteCookies("COOKIE-BEARER")
+//                .logoutSuccessHandler(
+//                        (httpServletRequest, httpServletResponse, authentication) -> log.info("Logout Successful"))
+//                .permitAll()
                 .and()
-                .addFilterBefore(new JWTLoginFilter("/gettoken", authenticationManager(), jwtSecret, jwtTTLSec * 1000),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTAuthenticationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+//                .and()
+//                .addFilterBefore(new JWTLoginFilter("/gettoken", authenticationManager(), jwtSecret, jwtTTLSec * 1000),
+//                        UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JWTAuthenticationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class)
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 }

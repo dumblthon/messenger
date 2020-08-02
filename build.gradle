@@ -26,6 +26,12 @@ subprojects {
 		}
 	}
 
+	dependencyManagement {
+		dependencies {
+			dependency group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+		}
+	}
+
 	test {
 		useJUnitPlatform()
 	}
