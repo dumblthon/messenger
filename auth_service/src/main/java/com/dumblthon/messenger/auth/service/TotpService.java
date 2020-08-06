@@ -1,5 +1,7 @@
-package com.dumblthon.messenger.auth.otp.totp;
+package com.dumblthon.messenger.auth.service;
 
+import com.dumblthon.messenger.auth.exception.UserAlreadyExistsException;
+import com.dumblthon.messenger.auth.model.UserSecret;
 import org.springframework.stereotype.Service;
 
 @Service

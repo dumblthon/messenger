@@ -1,4 +1,4 @@
-package com.dumblthon.messenger.auth.otp.totp;
+package com.dumblthon.messenger.auth.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
 

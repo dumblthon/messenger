@@ -29,7 +29,9 @@ subprojects {
 
 	dependencyManagement {
 		dependencies {
-			dependency group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+			dependency 'com.google.guava:guava:29.0-jre'
+			dependency 'dev.samstevens.totp:totp-spring-boot-starter:1.7'
+			dependency 'com.h2database:h2:1.4.200'
 		}
 	}
 

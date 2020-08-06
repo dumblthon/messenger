@@ -4,6 +4,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'com.google.guava:guava'
+    implementation 'dev.samstevens.totp:totp-spring-boot-starter'
+    testImplementation 'com.h2database:h2'
 //  todo move to dependency management
 //  v2
     implementation "org.springframework.security.oauth:spring-security-oauth2:2.3.1.RELEASE"

@@ -1,5 +1,6 @@
-package com.dumblthon.messenger.auth.otp.totp;
+package com.dumblthon.messenger.auth.repository;
 
+import com.dumblthon.messenger.auth.model.UserSecret;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

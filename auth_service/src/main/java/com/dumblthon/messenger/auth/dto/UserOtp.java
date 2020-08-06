@@ -1,11 +1,11 @@
-package com.dumblthon.messenger.auth.otp.totp;
+package com.dumblthon.messenger.auth.dto;
 
-public class UserOtpDto {
+public class UserOtp {
 
     private long userId;
     private String code;
 
-    public UserOtpDto() { }
+    public UserOtp() { }
 
     public long getUserId() {
         return userId;

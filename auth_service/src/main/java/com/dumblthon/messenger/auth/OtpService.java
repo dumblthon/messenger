@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class OtpService {
@@ -22,14 +19,8 @@ public class OtpService {
 
     private final Cache<String, Integer> otpCache;
 
-    private final String secret;
-
-    private volatile AtomicLong counter = new AtomicLong();
-
     @Autowired
-    public OtpService(String secret) {
-        this.secret = secret;
-
+    public OtpService() {
         this.otpCache = CacheBuilder.newBuilder().
                 expireAfterWrite(EXPIRE_MINS, TimeUnit.MINUTES).
                 build();

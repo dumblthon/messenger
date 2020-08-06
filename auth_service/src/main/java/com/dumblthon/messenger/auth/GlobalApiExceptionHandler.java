@@ -1,6 +1,6 @@
 package com.dumblthon.messenger.auth;
 
-import com.dumblthon.messenger.auth.otp.totp.UserAlreadyExistsException;
+import com.dumblthon.messenger.auth.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,25 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 @RestControllerAdvice
 public class GlobalApiExceptionHandler {
-
-    public static ApiException apiExceptionFrom(HttpStatus status, Exception e) {
-        return new ApiException(status, e.getClass().getSimpleName(), e.getMessage());
-    }
 
     public static Map<String, Object> mapResponseFrom(HttpStatus status, Exception e) {
         Map<String, Object> result = new HashMap<>();
         result.put("status", status);
         result.put("error", e.getClass().getSimpleName());
-        result.put("message", e.getMessage());
-        return result;
-    }
-
-    public static Map<String, Object> mapResponseFrom(ApiException e) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", e.getStatus());
-        result.put("error", e.getError());
         result.put("message", e.getMessage());
         return result;
     }

@@ -1,10 +1,10 @@
-package com.dumblthon.messenger.auth.otp.totp;
+package com.dumblthon.messenger.auth.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 
+@SuppressWarnings("unused")
 @Entity
 public class UserSecret {
 
@@ -32,4 +32,5 @@ public class UserSecret {
     public String getSecret() {
         return secret;
     }
+
 }
