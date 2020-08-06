@@ -21,6 +21,7 @@ subprojects {
 	targetCompatibility = '1.8'
 
 	dependencies {
+		testImplementation 'junit:junit:4.12'
 		testImplementation('org.springframework.boot:spring-boot-starter-test') {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 		}

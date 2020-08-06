@@ -9,6 +9,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class OtpService {
@@ -18,9 +20,11 @@ public class OtpService {
     // cache based on username and OPT MAX 8
     private static final Integer EXPIRE_MINS = 5;
 
-    private final Cache<String, String> otpCache;
+    private final Cache<String, Integer> otpCache;
 
     private final String secret;
+
+    private volatile AtomicLong counter = new AtomicLong();
 
     @Autowired
     public OtpService(String secret) {
@@ -34,15 +38,15 @@ public class OtpService {
     //This method is used to push the opt number against Key. Rewrite the OTP if it exists
     //Using user id as key
     public int generateOTP(String key) throws InvalidKeyException, NoSuchAlgorithmException {
-        Random random = new Random();
-        int otp = 100000 + random.nextInt(900000);
-        otpCache.put(key, new Hmac(secret)
-                .generate(Integer.toString(otp)));
-        return otp;
+        int counter = 0; // todo
+//        int code = new Hmac(secret).generate(key, counter);
+//        otpCache.put(key, code);
+//        return code;
+        return 0;
     }
 
     //This method is used to return the OPT number against Key->Key values is username
-    public String getOtp(String key) {
+    public Integer getOtp(String key) {
         return otpCache.getIfPresent(key);
     }
 
