@@ -52,15 +52,13 @@ class ChatComponent extends React.Component {
                             actions={[<span key="comment-list-reply-to-0">Reply to</span>]}
                             author={item.author}
                             avatar={item.avatar}
-                            content={item.content}
+                            content={item.message}
                             datetime={
                                 <Tooltip
-                                title={moment()
-                                    .subtract(2, 'days')
+                                title={moment(item.datetime, 'YYYY-MM-DD HH:mm:ss')
                                     .format('YYYY-MM-DD HH:mm:ss')}>
                                     <span>
-                                      {moment()
-                                          .subtract(2, 'days')
+                                      {moment(item.datetime, 'YYYY-MM-DD HH:mm:ss')
                                           .fromNow()}
                                     </span>
                                 </Tooltip>}

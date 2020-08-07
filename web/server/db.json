@@ -1,28 +1,28 @@
 {
   "messages": [
     {
-      "author": "1",
-      "message": "1",
-      "datetime": "1",
-      "avatar": "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+      "author": "Пёс",
+      "message": "Первый",
+      "datetime": "2020-06-08 10:10:10",
+      "avatar": "icons8-angry-dog-96.png"
     },
     {
-      "author": "2",
-      "message": "2",
-      "datetime": "2",
-      "avatar": "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+      "author": "Василий",
+      "message": "Второй",
+      "datetime": "2020-08-06 10:10:10",
+      "avatar": "icons8-cute-hamster-96.png"
     },
     {
-      "author": "3",
-      "message": "3",
-      "datetime": "3",
-      "avatar": "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+      "author": "Драго",
+      "message": "Третий",
+      "datetime": "2020-08-07 11:10:10",
+      "avatar": "icons8-european-dragon-96.png"
     },
     {
-      "author": "3",
-      "message": "3",
-      "datetime": "3",
-      "avatar": "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+      "author": "Пандарен",
+      "message": "Четвертый",
+      "datetime": "2020-08-07 12:10:10",
+      "avatar": "icons8-panda-96.png"
     }
   ]
 }
