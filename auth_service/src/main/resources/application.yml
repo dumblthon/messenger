@@ -2,9 +2,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+jwt:
+  secret: ${JWT_SECRET}
+  ttl: 604800 # 60 × 60 × 24 × 7
 totp:
   secret.length: 128
   code.length: 6
   time:
     period: 30
     discrepancy: 2
+sotp:
+  expireMins: 5

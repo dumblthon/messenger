@@ -1,53 +1,57 @@
 package com.dumblthon.messenger.auth.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
+@SuppressWarnings("unused")
+@Entity
 public class UserInfo implements Serializable {
 
-    private final String username;
+    private static final long serialVersionUID = 1L;
 
-    @JsonProperty(value = "first_name")
-    private String firstName;
-    @JsonProperty(value = "second_name")
-    private String secondName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
+    @SequenceGenerator(name="user_id_generator", sequenceName = "user_id_seq", allocationSize = 1)
+    @Column(name = "id", updatable = false, nullable = false)
+    private long id;
+
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @Column(name = "secret") // for TOTP: updatable = false, nullable = false
+    private String secret;
+
+    public UserInfo() {
+
+    }
 
     public UserInfo(String username) {
         this.username = username;
+    }
+
+    public UserInfo(String username, String secret) {
+        this.username = username;
+        this.secret = secret;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getSecret() {
+        return secret;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserInfo userInfo = (UserInfo) o;
-        return username.equals(userInfo.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username);
-    }
 }

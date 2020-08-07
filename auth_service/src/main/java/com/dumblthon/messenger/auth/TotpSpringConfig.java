@@ -1,6 +1,6 @@
 package com.dumblthon.messenger.auth;
 
-import com.dumblthon.messenger.auth.repository.UserSecretRepository;
+import com.dumblthon.messenger.auth.repository.UserInfoRepository;
 import com.dumblthon.messenger.auth.service.TotpService;
 import com.dumblthon.messenger.auth.service.TotpServiceDefaultImpl;
 import dev.samstevens.totp.code.CodeVerifier;
@@ -16,9 +16,9 @@ public class TotpSpringConfig {
     @Bean
     public TotpService totpService(SecretGenerator secretGenerator,
                                    CodeVerifier codeVerifier,
-                                   UserSecretRepository userSecretRepository) {
+                                   UserInfoRepository userInfoRepository) {
 
-        return new TotpServiceDefaultImpl(secretGenerator, codeVerifier, userSecretRepository);
+        return new TotpServiceDefaultImpl(secretGenerator, codeVerifier, userInfoRepository);
     }
 
     @Bean

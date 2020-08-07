@@ -1,8 +1,8 @@
 package com.dumblthon.messenger.auth.service;
 
 import com.dumblthon.messenger.auth.exception.UserAlreadyExistsException;
-import com.dumblthon.messenger.auth.model.UserSecret;
-import com.dumblthon.messenger.auth.repository.UserSecretRepository;
+import com.dumblthon.messenger.auth.model.UserInfo;
+import com.dumblthon.messenger.auth.repository.UserInfoRepository;
 import dev.samstevens.totp.code.CodeVerifier;
 import dev.samstevens.totp.secret.SecretGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,31 +16,38 @@ public class TotpServiceDefaultImpl implements TotpService {
 
     private final CodeVerifier codeVerifier;
 
-    private final UserSecretRepository userSecretRepository;
+    private final UserInfoRepository userInfoRepository;
 
     @Autowired
     public TotpServiceDefaultImpl(SecretGenerator secretGenerator,
                                   CodeVerifier codeVerifier,
-                                  UserSecretRepository userSecretRepository) {
+                                  UserInfoRepository userInfoRepository) {
         this.secretGenerator = secretGenerator;
         this.codeVerifier = codeVerifier;
-        this.userSecretRepository = userSecretRepository;
+        this.userInfoRepository = userInfoRepository;
+    }
+
+    @Override
+    public Optional<UserInfo> findUser(long userId) {
+        return userInfoRepository.findById(userId);
+    }
+
+    @Override
+    public Optional<UserInfo> findUser(String username) {
+        return userInfoRepository.findByUsername(username);
     }
 
     @Override
     @Transactional
-    public UserSecret generateSecret(long userId) throws UserAlreadyExistsException {
-        Optional<UserSecret> existingRecord = userSecretRepository.findById(userId);
-        if (existingRecord.isPresent())
-            throw new UserAlreadyExistsException("Ключ уже сгенерирован", userId);
+    public UserInfo createUser(String username) throws UserAlreadyExistsException {
         String secret = secretGenerator.generate();
-        UserSecret userSecret = new UserSecret(userId, secret);
-        return userSecretRepository.save(userSecret);
+        UserInfo userInfo = new UserInfo(username, secret);
+        return userInfoRepository.save(userInfo);
     }
 
     @Override
     public boolean validatePassword(long userId, String code) {
-        Optional<UserSecret> existingRecord = userSecretRepository.findById(userId);
+        Optional<UserInfo> existingRecord = userInfoRepository.findById(userId);
         return existingRecord.isPresent() &&
                 codeVerifier.isValidCode(existingRecord.get().getSecret(), code);
     }

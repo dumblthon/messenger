@@ -2,14 +2,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
-    username: sa
-    password: sa
+jwt:
+  secret: ${JWT_SECRET}
+  ttl: 604800 # 60 × 60 × 24 × 7
 totp:
   secret.length: 128
   code.length: 6
   time:
     period: 30
     discrepancy: 2
+sotp:
+  expireMins: 5

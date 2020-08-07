@@ -60,3 +60,18 @@
 * GitHub SprintBoot-OTP https://github.com/shrisowdhaman/SprintBoot-OTP
 * GitHub Spring Security OTP Plugin https://github.com/upcrob/spring-security-otp
 * http://www.ijircce.com/upload/2014/october/28_OTP.pdf
+
+# JWT 
+
+Связывается ли AuthService с UserService для получения информации или наоборот? \
+Имеют ли AuthService и UserService одинаковые Id для одинаковых пользователей? \
+
+* Двухфакторная аутентификация
+* Проверка уникальности пользователя
+* Добавить refresh token
+* Валидация токена
+* AuthenticationManager & UserDetails & UserDetailsService
+* Вернуть JDBC '_'
+* CorsConfiguration
+* Logout
+* Тесты

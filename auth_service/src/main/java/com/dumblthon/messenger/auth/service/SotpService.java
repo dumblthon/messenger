@@ -1,18 +1,16 @@
 package com.dumblthon.messenger.auth.service;
 
 import com.dumblthon.messenger.auth.model.UserInfo;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
-public interface TotpService {
+public interface SotpService {
 
     Optional<UserInfo> findUser(long userId);
 
     Optional<UserInfo> findUser(String username);
 
-    UserInfo createUser(String username);
+    UserInfo authenticate(String username);
 
     boolean validatePassword(long userId, String code);
 
