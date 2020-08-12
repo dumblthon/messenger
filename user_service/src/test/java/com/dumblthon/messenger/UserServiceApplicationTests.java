@@ -1,13 +1,13 @@
-package com.dumblthon.messenger.sub_module;
+package com.dumblthon.messenger;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SubModuleApplicationTests {
+class UserServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+	//@Test
+//	void contextLoads() {
+//	}
 
 }

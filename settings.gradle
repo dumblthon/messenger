@@ -1,4 +1,4 @@
 rootProject.name = 'messenger'
 
 include 'common'
-include 'sub_module'
+include 'user_service'
