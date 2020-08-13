@@ -11,7 +11,11 @@ public class User {
     @Column(name = "id", nullable = false)
     private @Id Long id;
 
-    private String name;
+    private String login;
+
+    private String firstName;
+
+    private String lastName;
 
     private String email;
 
