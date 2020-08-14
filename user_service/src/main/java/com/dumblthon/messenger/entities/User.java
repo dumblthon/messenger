@@ -4,7 +4,7 @@ import javax.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 @Table(name = "users")
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,7 @@ public class User {
 
     private String email;
 
+    @Column(nullable = false)
     private Boolean active;
 
 }

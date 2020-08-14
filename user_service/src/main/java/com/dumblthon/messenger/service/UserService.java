@@ -18,6 +18,7 @@ public class UserService {
         user.setFirstName(newUser.getFirstName());
         user.setLastName(newUser.getLastName());
         user.setEmail(newUser.getEmail());
+        user.setActive(newUser.getActive());
         userRepository.save(user);
         return true;
     }
@@ -43,7 +44,7 @@ public class UserService {
     }
 
     public boolean addNewUser(User user) {
-        user.setActive = true;
+        user.setActive(true);
         return saveUser(user);
     }
 
