@@ -14,10 +14,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(path="/add") // Map ONLY POST Requests
+    @PostMapping(path="/add")
     public @ResponseBody String addNewUser(@RequestBody @Validated User user) {
         // @ResponseBody means the returned String is the response, not a view name
-        userService.saveUser(user);
+        userService.addNewUser(user);
         return "Saved";
     }
 

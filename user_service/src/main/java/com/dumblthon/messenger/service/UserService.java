@@ -42,6 +42,11 @@ public class UserService {
         return true;
     }
 
+    public boolean addNewUser(User user) {
+        user.setActive = true;
+        return saveUser(user);
+    }
+
     public boolean deleteUser(Long userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);

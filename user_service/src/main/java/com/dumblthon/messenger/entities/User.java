@@ -11,6 +11,7 @@ public class User {
     @Column(name = "id", nullable = false)
     private @Id Long id;
 
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     private String firstName;
@@ -18,5 +19,7 @@ public class User {
     private String lastName;
 
     private String email;
+
+    private Boolean active;
 
 }
