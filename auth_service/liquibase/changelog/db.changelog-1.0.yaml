@@ -1,0 +1,95 @@
+databaseChangeLog:
+  - changeSet:
+      id:  1
+      author: icndel
+      changes:
+        - createTable:
+            schemaName: user_info
+            tableName: user
+            columns:
+              - column:
+                  name:  id
+                  type:  bigint
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  phone_number
+                  type:  varchar(20)
+                  constraints:
+                    - unique: true
+                    - nullable: false
+        - createTable:
+            schemaName: user_info
+            tableName: user_otp
+            columns:
+              - column:
+                  name:  user_id
+                  type:  bigint
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  device_id
+                  type:  text
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  code
+                  type:  varchar(10)
+                  constraints:
+                    - nullable: false
+              - column:
+                  name:  sent_at
+                  type:  timestamp
+                  constraints:
+                    - nullable: false
+        - addPrimaryKey:
+            schemaName: user_info
+            tableName: user_otp
+            columnNames:  user_id, device_id
+            constraintName:  pk_user_otp
+        - addForeignKeyConstraint:
+            baseTableSchemaName:  user_info
+            baseTableName:  user_otp
+            baseColumnNames:  user_id
+            referencedTableSchemaName:  user_info
+            referencedTableName:  user
+            referencedColumnNames:  id
+            constraintName:  fk_otp_user_id
+            onUpdate:  RESTRICT
+            onDelete:  CASCADE
+        - createTable:
+            schemaName: user_info
+            tableName: user_secret
+            columns:
+              - column:
+                  name:  user_id
+                  type:  bigint
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  device_id
+                  type:  text
+                  constraints:
+                    nullable:  false
+              - column:
+                  name:  secret
+                  type:  text
+                  constraints:
+                    - nullable: false
+        - addPrimaryKey:
+            schemaName: user_info
+            tableName: user_secret
+            columnNames:  user_id, device_id
+            constraintName:  pk_user_secret
+        - addForeignKeyConstraint:
+            baseTableSchemaName:  user_info
+            baseTableName:  user_secret
+            baseColumnNames:  user_id
+            referencedTableSchemaName:  user_info
+            referencedTableName:  user
+            referencedColumnNames:  id
+            constraintName:  fk_secret_user_id
+            onUpdate:  RESTRICT
+            onDelete:  CASCADE

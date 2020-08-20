@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.13.0.xsd">
+    <logging>INFO</logging>
+
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/service_auth</url>
+        <user>user_auth</user>
+        <password>test</password>
+    </jdbc>
+
+    <generator>
+        <database>
+            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+            <includes>.*</includes>
+            <inputSchema>user_info</inputSchema>
+        </database>
+
+        <generate>
+            <records>false</records>
+        </generate>
+
+        <target>
+            <packageName>com.dumblthon.messenger.auth.userinfo</packageName>
+            <directory>auth_service/build/generated/jooq/src/main/java</directory>
+        </target>
+    </generator>
+</configuration>

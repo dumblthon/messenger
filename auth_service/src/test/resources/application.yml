@@ -1,7 +1,8 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/service_auth
+    username: user_auth
+    password: test
 jwt:
   secret: ${JWT_SECRET}
   ttl: 604800 # 60 × 60 × 24 × 7

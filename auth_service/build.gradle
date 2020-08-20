@@ -1,13 +1,47 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jooq:jooq-codegen:${jooqVersion}"
+        classpath "org.jooq:jooq-meta-extensions:${jooqVersion}"
+        classpath "org.postgresql:postgresql:${postgresVersion}"
+    }
+}
+
+plugins {
+    id 'nu.studer.jooq' version '5.0.1'
+}
+
+sourceSets.main.java.srcDirs += ['build/generated/jooq/src/main/java']
+
 dependencies {
+    // todo change scope
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    implementation 'org.jooq:jooq'
+    implementation 'org.jooq:jooq-meta'
+
     implementation 'org.postgresql:postgresql'
     implementation 'io.jsonwebtoken:jjwt'
-    // todo remove guava
-    implementation 'com.google.guava:guava'
-    implementation 'dev.samstevens.totp:totp-spring-boot-starter'
 
-    testImplementation 'com.h2database:h2'
+    implementation 'javax.validation:validation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:postgresql"
+}
+
+import org.jooq.codegen.GenerationTool
+
+task jooqCodeGenXml {
+    doLast {
+        GenerationTool.generate(new File('auth_service/jooq_postgres.xml').text)
+    }
 }

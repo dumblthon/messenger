@@ -1,0 +1,37 @@
+version: '3.8'
+networks:
+  messenger-net:
+    external: true
+volumes:
+  postgres-data:
+  postgres-log:
+  pgadmin-data:
+  pgadmin-servers:
+services:
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: postgres
+    networks:
+      - messenger-net
+    # for jooq and tests :(
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-log:/var/log/postgresql
+      - ./init:/docker-entrypoint-initdb.d
+    env_file:
+      - postgres-${PROFILE}.env
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: pgadmin4
+    restart: always
+    networks:
+      - messenger-net
+    ports:
+      - "${PGADMIN_HOST_PORT}:80"
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin
+    - pgadmin-servers:/pgadmin4/servers.json
+    env_file:
+      - pgadmin-${PROFILE}.env

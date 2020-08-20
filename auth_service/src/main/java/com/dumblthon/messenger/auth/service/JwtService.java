@@ -1,12 +1,9 @@
 package com.dumblthon.messenger.auth.service;
 
-import org.springframework.stereotype.Service;
+import com.dumblthon.messenger.auth.dto.JwtResponse;
 
-@Service
 public interface JwtService {
 
-    String generateToken(String username);
-
-    boolean validateToken(String token);
+    JwtResponse generateToken(long userId, String deviceId);
 
 }

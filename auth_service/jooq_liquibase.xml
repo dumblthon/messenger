@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.13.0.xsd">
+    <logging>INFO</logging>
+
+    <!--  todo fix liquibase code generation  -->
+
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/service_auth</url>
+        <user>user_auth</user>
+        <password>test</password>
+    </jdbc>
+
+    <generator>
+        <database>
+            <name>org.jooq.meta.extensions.liquibase.LiquibaseDatabase</name>
+            <properties>
+                <property>
+                    <key>scripts</key>
+                    <value>auth_service/liquibase/changelog/db.changelog-master.xml</value>
+                </property>
+                <property>
+                    <key>includeLiquibaseTables</key>
+                    <value>false</value>
+                </property>
+                <property>
+                    <key>database.liquibaseSchemaName</key>
+                    <value>public</value>
+                </property>
+                <property>
+                    <key>database.defaultSchemaName</key>
+                    <value>user_info</value>
+                </property>
+                <property>
+                    <key>database.connection</key>
+                    <value>jdbc:postgresql://localhost:5432/service_auth</value>
+                </property>
+            </properties>
+        </database>
+
+        <generate/>
+
+        <target>
+            <packageName>com.dumblthon.messenger.auth.userinfo</packageName>
+            <directory>auth_service/build/generated/sources/jooq</directory>
+        </target>
+    </generator>
+</configuration>
