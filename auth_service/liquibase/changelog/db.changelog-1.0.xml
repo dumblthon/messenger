@@ -3,27 +3,27 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet  id="1"  author="icndel">
+    <changeSet id="1" author="icndel">
         <createTable schemaName="user_info" tableName="user">
-            <column  name="id"  type="bigint"  autoIncrement="true">
-                <constraints  primaryKey="true"  nullable="false"/>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column  name="phone_number"  type="varchar(20)" >
+            <column name="phone_number" type="varchar(20)" >
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
 
         <createTable schemaName="user_info" tableName="user_otp">
-            <column  name="user_id"  type="bigint" >
+            <column name="user_id" type="bigint" >
                 <constraints nullable="false"/>
             </column>
-            <column  name="device_id"  type="text" >
+            <column name="device_id" type="text" >
                 <constraints nullable="false"/>
             </column>
-            <column  name="code"  type="varchar(10)" >
+            <column name="code" type="varchar(10)" >
                 <constraints nullable="false"/>
             </column>
-            <column  name="sent_at"  type="timestamp" >
+            <column name="sent_at" type="timestamp" >
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -41,13 +41,13 @@
                                  onUpdate="RESTRICT" onDelete="CASCADE"/>
 
         <createTable schemaName="user_info" tableName="user_secret">
-            <column  name="user_id"  type="bigint" >
+            <column name="user_id" type="bigint" >
                 <constraints nullable="false"/>
             </column>
-            <column  name="device_id"  type="text" >
+            <column name="device_id" type="text" >
                 <constraints nullable="false"/>
             </column>
-            <column  name="secret"  type="text" >
+            <column name="secret" type="text" >
                 <constraints nullable="false"/>
             </column>
         </createTable>

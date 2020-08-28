@@ -8,6 +8,8 @@ ext {
 	jooqVersion = "3.13.4"
 	hibernateValidatorVersion = "6.1.5.Final"
 	testContainersVersion = "1.14.3"
+	numbisJoseJwtVersion = "8.20"
+	liquibaseCoreVersion = "4.0.0"
 }
 
 allprojects {
@@ -26,6 +28,7 @@ subprojects {
 
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
+
 	dependencies {
 		testImplementation 'junit:junit:4.12'
 		testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -36,7 +39,8 @@ subprojects {
 	dependencyManagement {
 		dependencies {
 			dependency "org.postgresql:postgresql:${postgresVersion}"
-			dependency "io.jsonwebtoken:jjwt:0.9.1"
+			dependency "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+			dependency "com.nimbusds:nimbus-jose-jwt:${numbisJoseJwtVersion}"
 			dependency "org.jooq:jooq:${jooqVersion}"
 			dependency "org.jooq:jooq-meta:${jooqVersion}"
 			dependency "org.jooq:jooq-codegen:${jooqVersion}"

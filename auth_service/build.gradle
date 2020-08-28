@@ -1,13 +1,11 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-
     dependencies {
         classpath "org.jooq:jooq-codegen:${jooqVersion}"
         classpath "org.jooq:jooq-meta-extensions:${jooqVersion}"
         classpath "org.postgresql:postgresql:${postgresVersion}"
+        classpath "org.testcontainers:testcontainers:${testContainersVersion}"
+        classpath "org.testcontainers:postgresql:${testContainersVersion}"
+        classpath "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
     }
 }
 
@@ -18,30 +16,75 @@ plugins {
 sourceSets.main.java.srcDirs += ['build/generated/jooq/src/main/java']
 
 dependencies {
-    // todo change scope
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     implementation 'org.jooq:jooq'
-    implementation 'org.jooq:jooq-meta'
-
-    implementation 'org.postgresql:postgresql'
-    implementation 'io.jsonwebtoken:jjwt'
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.nimbusds:nimbus-jose-jwt'
 
     implementation 'javax.validation:validation-api'
     implementation 'org.hibernate.validator:hibernate-validator'
-    implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+    compileOnly 'org.hibernate.validator:hibernate-validator-annotation-processor'
 
     testImplementation "org.testcontainers:testcontainers"
     testImplementation "org.testcontainers:postgresql"
+    testImplementation "org.liquibase:liquibase-core"
 }
 
+/* JOOQ */
+
+import liquibase.Contexts
+import liquibase.Liquibase
+import liquibase.database.Database
+import liquibase.database.DatabaseFactory
+import liquibase.database.jvm.JdbcConnection
+import liquibase.resource.FileSystemResourceAccessor
+import liquibase.resource.ResourceAccessor
+@GrabConfig(systemClassLoader = true)
+@Grab('org.postgresql:postgresql:42.2.15')
+
 import org.jooq.codegen.GenerationTool
+import org.postgresql.Driver
+import org.testcontainers.containers.PostgreSQLContainer
+
+import java.nio.file.Paths
+import java.sql.Statement
 
 task jooqCodeGenXml {
     doLast {
-        GenerationTool.generate(new File('auth_service/jooq_postgres.xml').text)
+        PostgreSQLContainer container = new PostgreSQLContainer<>()
+        container.setPortBindings(Collections.singletonList("5454:5432"))
+        container.withDatabaseName("test")
+        container.withUsername("test")
+        container.withPassword("test")
+
+        Statement statement = null
+        try {
+            container.start()
+
+            Properties connectionProps = new Properties()
+            connectionProps.put("user", container.getUsername())
+            connectionProps.put("password", container.getPassword())
+
+            String changelogRelPath = "liquibase/changelog/db.changelog-master.xml";
+            File baseDir = Paths.get(".").toFile();
+            ResourceAccessor resourceAccessor = new FileSystemResourceAccessor(baseDir);
+            JdbcConnection jdbcConnection = new JdbcConnection()
+            jdbcConnection.open(container.getJdbcUrl(), new Driver(), connectionProps)
+            statement = jdbcConnection.createStatement()
+            statement.execute("CREATE SCHEMA IF NOT EXISTS user_info")
+            Database database = DatabaseFactory.getInstance()
+                    .findCorrectDatabaseImplementation(jdbcConnection);
+            Liquibase liquibase = new Liquibase(changelogRelPath, resourceAccessor, database);
+            liquibase.update(new Contexts());
+
+            GenerationTool.generate(new File('jooq_postgres.xml').text)
+        } finally {
+            if (statement != null)
+                statement.close()
+            container.stop()
+        }
     }
 }

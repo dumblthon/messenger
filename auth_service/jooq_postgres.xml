@@ -4,8 +4,10 @@
 
     <jdbc>
         <driver>org.postgresql.Driver</driver>
-        <url>jdbc:postgresql://localhost:5432/service_auth</url>
-        <user>user_auth</user>
+<!--        <url>jdbc:postgresql://localhost:5432/service_auth</url>-->
+        <url>jdbc:postgresql://localhost:5454/test</url>
+<!--        <user>user_auth</user>-->
+        <user>test</user>
         <password>test</password>
     </jdbc>
 
@@ -14,15 +16,24 @@
             <name>org.jooq.meta.postgres.PostgresDatabase</name>
             <includes>.*</includes>
             <inputSchema>user_info</inputSchema>
+
+            <forcedTypes>
+                <forcedType>
+                    <userType>java.util.Date</userType>
+                    <includeTypes>timestamp.*</includeTypes>
+                    <converter>com.dumblthon.messenger.auth.repository.converter.LocalDateTimeToDateConverter</converter>
+                </forcedType>
+            </forcedTypes>
         </database>
 
         <generate>
-            <records>false</records>
+            <records>true</records>
+            <interfaces>true</interfaces>
         </generate>
 
         <target>
             <packageName>com.dumblthon.messenger.auth.userinfo</packageName>
-            <directory>auth_service/build/generated/jooq/src/main/java</directory>
+            <directory>build/generated/jooq/src/main/java</directory>
         </target>
     </generator>
 </configuration>
