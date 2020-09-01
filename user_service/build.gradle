@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.postgresql:postgresql'
+    implementation 'io.jsonwebtoken:jjwt'
+    // todo remove guava
+    implementation 'com.google.guava:guava'
+    implementation 'dev.samstevens.totp:totp-spring-boot-starter'
+
+    testImplementation 'com.h2database:h2'
+}
