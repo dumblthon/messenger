@@ -19,6 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -97,19 +101,23 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
-
     @Test
     public void testValidationEmptyDeviceId() throws Exception {
         ValidationRequest request = new ValidationRequest(
                 1L, null, "123456");
+
+        Map<String, Object> content = new HashMap<>();
+        content.put("message", "Некорректный запрос");
+        content.put("errors", Collections.singletonList(
+                "Поле 'deviceId' не может быть пустым"));
 
         this.mockMvc
                 .perform(post("/validate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(objectMapper.writeValueAsString(content)));
     }
 
     @Test
@@ -155,13 +163,18 @@ public class AuthControllerTest {
         MissingValidationInfoException e = new MissingValidationInfoException(1L, "dev_1");
         when(otpService.validate(any())).thenThrow(e);
 
+        Map<String, Object> content = new HashMap<>();
+        content.put("userId", 1L);
+        content.put("deviceId", "dev_1");
+        content.put("message", e.getMessage());
+
         this.mockMvc
                 .perform(post("/validate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-//                .andExpect(content().json(objectMapper.writeValueAsString(e)));
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().json(objectMapper.writeValueAsString(content)));
     }
 
     @Test
@@ -173,13 +186,17 @@ public class AuthControllerTest {
         UserNotFoundException e = new UserNotFoundException(1L);
         when(jwtService.generateToken(anyLong(), any())).thenThrow(e);
 
+        Map<String, Object> content = new HashMap<>();
+        content.put("userId", 1L);
+        content.put("message", e.getMessage());
+
         this.mockMvc
                 .perform(post("/validate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isNotFound());
-//                .andExpect(content().json(objectMapper.writeValueAsString(e)));
+                .andExpect(status().isNotFound())
+                .andExpect(content().json(objectMapper.writeValueAsString(content)));
     }
 
 }

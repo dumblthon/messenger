@@ -1,4 +1,4 @@
-package com.dumblthon.messenger.auth.service;
+package com.dumblthon.messenger.auth.service.impl;
 
 import com.dumblthon.messenger.auth.component.CodeGenerator;
 import com.dumblthon.messenger.auth.component.MacGenerator;
@@ -12,6 +12,8 @@ import com.dumblthon.messenger.auth.model.UserSecret;
 import com.dumblthon.messenger.auth.repository.UserOtpRepository;
 import com.dumblthon.messenger.auth.repository.UserRepository;
 import com.dumblthon.messenger.auth.repository.UserSecretRepository;
+import com.dumblthon.messenger.auth.service.OtpSenderProvider;
+import com.dumblthon.messenger.auth.service.OtpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +86,8 @@ public class OtpServiceDefaultImpl implements OtpService {
         otpSender.send(user, userOtp);
 
         return secretOpt.isPresent() ?
-                new AuthResponse(user, userOpt.isPresent(), otpSender) :
-                new AuthResponse(user, userSecret, userOpt.isPresent(), otpSender);
+                new AuthResponse(user, !userOpt.isPresent(), otpSender) :
+                new AuthResponse(user, userSecret, !userOpt.isPresent(), otpSender);
     }
 
     private UserSecret createSecret(long userId, String deviceId) {

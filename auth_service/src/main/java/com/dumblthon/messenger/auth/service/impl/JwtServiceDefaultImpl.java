@@ -1,4 +1,4 @@
-package com.dumblthon.messenger.auth.service;
+package com.dumblthon.messenger.auth.service.impl;
 
 import com.dumblthon.messenger.auth.dto.JwtResponse;
 import com.dumblthon.messenger.auth.exception.MissingValidationInfoException;
@@ -7,6 +7,7 @@ import com.dumblthon.messenger.auth.model.User;
 import com.dumblthon.messenger.auth.model.UserOtp;
 import com.dumblthon.messenger.auth.repository.UserOtpRepository;
 import com.dumblthon.messenger.auth.repository.UserRepository;
+import com.dumblthon.messenger.auth.service.JwtService;
 import com.nimbusds.jose.jwk.JWKSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;

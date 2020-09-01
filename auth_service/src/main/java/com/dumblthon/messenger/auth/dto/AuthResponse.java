@@ -6,6 +6,8 @@ import com.dumblthon.messenger.auth.model.UserSecret;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Objects;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponse {
 
@@ -41,5 +43,30 @@ public class AuthResponse {
 
     public String getSenderId() {
         return senderId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthResponse response = (AuthResponse) o;
+        return userId == response.userId &&
+                created == response.created &&
+                Objects.equals(secret, response.secret) &&
+                Objects.equals(senderId, response.senderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, secret, senderId, created);
+    }
+
+    @Override
+    public String toString() {
+        return "AuthResponse{" +
+                "userId=" + userId +
+                ", senderId='" + senderId + '\'' +
+                ", created=" + created +
+                '}';
     }
 }

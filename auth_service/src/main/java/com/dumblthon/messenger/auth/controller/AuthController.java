@@ -1,6 +1,7 @@
 package com.dumblthon.messenger.auth.controller;
 
 import com.dumblthon.messenger.auth.dto.*;
+import com.dumblthon.messenger.auth.exception.RequestValidationException;
 import com.dumblthon.messenger.auth.service.JwtService;
 import com.dumblthon.messenger.auth.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @SuppressWarnings("unused")
 @RestController
@@ -29,14 +32,22 @@ public class AuthController {
 
     @Transactional
     @PostMapping(path = "/authenticate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthResponse> authenticate(@Validated @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest,
+                                                     Errors errors) {
+        if (errors.hasErrors())
+            throw new RequestValidationException(errors);
+
         AuthResponse response = otpService.authenticate(authRequest);
         HttpStatus status = response.isCreated() ? HttpStatus.CREATED : HttpStatus.OK;
         return ResponseEntity.status(status).body(response);
     }
 
     @PostMapping(path = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> validate(@Validated @RequestBody ValidationRequest otpRequest) {
+    public ResponseEntity<?> validate(@Valid @RequestBody ValidationRequest otpRequest,
+                                      Errors errors) {
+        if (errors.hasErrors())
+            throw new RequestValidationException(errors);
+
         ValidationResponse validationResponse = otpService.validate(otpRequest);
 
         if (validationResponse.isSuccessful()) {
@@ -50,4 +61,5 @@ public class AuthController {
             return ResponseEntity.status(status).body(validationResponse);
         }
     }
+
 }

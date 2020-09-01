@@ -1,9 +1,3 @@
-* Валидация токена
-* AuthenticationManager & UserDetails & UserDetailsService
-* CorsConfiguration
-* Logout
-* Тесты
-
 Авторизация с другого устройства: как перенести секрет для HMAC?
 
 1. Integration Test with Spring Context + Test Containers + Spring Liquibase
@@ -17,3 +11,7 @@
 8. Liquibase bean fails at startup
 9. Phone number regexp
 10. Swagger API Documentation + code generation tools
+11. Create SecretService & OtpService, rename OtpService to AuthService
+12. Logout
+13. CorsConfiguration
+14. More tests!..

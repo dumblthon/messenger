@@ -1,6 +1,7 @@
-package com.dumblthon.messenger.auth.service;
+package com.dumblthon.messenger.auth.service.impl;
 
 import com.dumblthon.messenger.auth.component.OtpSender;
+import com.dumblthon.messenger.auth.service.OtpSenderProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
