@@ -1,13 +1,14 @@
-package com.dumblthon.messenger.sub_module;
+package com.dumblthon.messenger;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SubModuleApplication {
+public class UserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SubModuleApplication.class, args);
+
+		SpringApplication.run(UserApplication.class, args);
 	}
 
 }

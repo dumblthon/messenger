@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "scripts": {
+    "test": "react-scripts test --env=jsdom",
+    "start": "react-scripts start",
+    "eject": "react-scripts eject",
+    "build": "react-scripts build",
+    "stubs": "json-server --watch server/db.json"
+  },
+  "name": "web",
+  "main": "index.js",
+  "devDependencies": {
+    "typescript": "^3.8.2"
+  },
+  "dependencies": {
+    "react-scripts": "^3.0.1",
+    "react-dom": "^16.12.0",
+    "react": "^16.12.0",
+    "moment": "latest",
+    "antd": "4.5.2",
+    "@ant-design/icons": "latest",
+    "json-server": "^0.16.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

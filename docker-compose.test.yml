@@ -28,10 +28,13 @@ services:
   mongo_express:
     image: mongo-express:${MONGO_EXPRESS_VERSION}
     container_name: mongo_express
+    restart: always
     networks:
       - messenger-net
     ports:
       - "${MONGO_EXPRESS_HOST_PORT}:8081"
+    env_file:
+      - mongodb/mongo_express-${PROFILE}.env
     depends_on:
       - "mongo"
   postgres:
@@ -58,14 +61,20 @@ services:
     - pgadmin-servers:/pgadmin4/servers.json
     env_file:
       - postgresql/pgadmin-${PROFILE}.env
-  sub_module:
-    image: training:${SUB_MODULE_VERSION}
-    container_name: sub_module
+  user_service:
+    container_name: user_service
     build:
-      context: ./sub_module
+      context: ./user_service
     environment:
       PROFILE: ${PROFILE}
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/submodule
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service
+      SPRING_DATASOURCE_USERNAME: user_service
+      SPRING_DATASOURCE_PASSWORD: user_service
+      SPRING_SHOW_SQL: 'true'
+
+      SPRING_JPA_GENERATE_DLL: 'true'
+      # SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEME: user_service
+      SPRING_JPA_HIBERNATE_DLL_AUTO: update
     networks:
       - messenger-net
     ports:
@@ -74,7 +83,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - ~/sub_module/logs:/log
-      - ~/sub_module/config:/config
+      - ~/user_service/logs:/log
+      - ~/user_service/config:/config
     depends_on:
       - 'postgres'
