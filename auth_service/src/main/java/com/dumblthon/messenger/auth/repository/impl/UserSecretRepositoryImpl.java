@@ -1,16 +1,16 @@
 package com.dumblthon.messenger.auth.repository.impl;
 
 import com.dumblthon.messenger.auth.model.UserSecret;
+import com.dumblthon.messenger.auth.repository.NamedParamJdbcOps;
 import com.dumblthon.messenger.auth.repository.UserSecretRepository;
 import org.jooq.DSLContext;
 import org.jooq.Param;
+import org.jooq.Query;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -20,7 +20,7 @@ import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.param;
 
 @Repository
-public class UserSecretRepositoryImpl implements UserSecretRepository {
+public class UserSecretRepositoryImpl implements UserSecretRepository, NamedParamJdbcOps<UserSecret> {
 
     private final NamedParameterJdbcOperations namedJdbcOperations;
 
@@ -39,44 +39,42 @@ public class UserSecretRepositoryImpl implements UserSecretRepository {
     }
 
     @Override
+    public NamedParameterJdbcOperations getNamedParamJdbcOperations() {
+        return namedJdbcOperations;
+    }
+
+    @Override
+    public RowMapper<UserSecret> getMapper() {
+        return mapper;
+    }
+
+    @Override
     public Optional<UserSecret> findByUserIdAndDeviceId(long userId, String deviceId) {
-        Param<Long> paramUserId = param("userId", Long.class);
-        Param<String> paramDeviceId = param("deviceId", String.class);
+        Param<Long> paramUserId = param("userId", userId);
+        Param<String> paramDeviceId = param("deviceId", deviceId);
 
-        String sql = create.select().from(USER_SECRET)
+        Query query = create.select().from(USER_SECRET)
                 .where(USER_SECRET.USER_ID.eq(paramUserId)
-                        .and(USER_SECRET.DEVICE_ID.eq(paramDeviceId)))
-                .getSQL();
+                        .and(USER_SECRET.DEVICE_ID.eq(paramDeviceId)));
 
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue(paramUserId.getName(), userId)
-                .addValue(paramDeviceId.getName(), deviceId);
-
-        return Optional.ofNullable(namedJdbcOperations
-                .queryForObject(sql, paramSource, mapper));
+        return queryForOptionalObject(query);
     }
 
     @Override
     public UserSecret save(UserSecret secret) {
-        Param<Long> paramUserId = param("userId", Long.class);
-        Param<String> paramDeviceId = param("deviceId", String.class);
-        Param<String> paramSecret = param("secret", String.class);
+        Param<Long> paramUserId = param("userId", secret.getUserId());
+        Param<String> paramDeviceId = param("deviceId", secret.getDeviceId());
+        Param<String> paramSecret = param("secret", secret.getSecret());
 
-        String sql = create.insertInto(USER_SECRET)
+        Query query = create.insertInto(USER_SECRET)
                 .set(USER_SECRET.USER_ID, paramUserId)
                 .set(USER_SECRET.DEVICE_ID, paramDeviceId)
                 .set(USER_SECRET.SECRET, paramSecret)
                 .onConflictOnConstraint(USER_SECRET.getPrimaryKey())
                 .doUpdate()
                 .set(USER_SECRET.SECRET, paramSecret)
-                .returningResult(asterisk())
-                .getSQL();
+                .returningResult(asterisk());
 
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue(paramUserId.getName(), secret.getUserId())
-                .addValue(paramDeviceId.getName(), secret.getDeviceId())
-                .addValue(paramSecret.getName(), secret.getSecret());
-
-        return namedJdbcOperations.queryForObject(sql, paramSource, mapper);
+        return queryForObject(query);
     }
 }

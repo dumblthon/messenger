@@ -1,5 +1,6 @@
 package com.dumblthon.messenger.auth.dto;
 
+import com.dumblthon.messenger.auth.component.OtpSender;
 import com.dumblthon.messenger.auth.model.User;
 import com.dumblthon.messenger.auth.model.UserSecret;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,30 +9,37 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponse {
 
-    private final User user;
-    private UserSecret userSecret;
+    private final long userId;
+    private final String secret;
+    private final String senderId;
 
     @JsonIgnore
     private final boolean created;
 
-    public AuthResponse(User user, boolean created) {
-        this.user = user;
-        this.created = created;
+    public AuthResponse(User user, boolean created, OtpSender sender) {
+        this(user, null, created, sender);
     }
 
-    public User getUser() {
-        return user;
+    public AuthResponse(User user, UserSecret secret, boolean created, OtpSender sender) {
+        this.userId = user.getId();
+        this.secret = secret != null ? secret.getSecret() : null;
+        this.created = created;
+        this.senderId = sender.getId();
     }
 
     public boolean isCreated() {
         return created;
     }
 
-    public UserSecret getUserSecret() {
-        return userSecret;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUserSecret(UserSecret userSecret) {
-        this.userSecret = userSecret;
+    public String getSecret() {
+        return secret;
+    }
+
+    public String getSenderId() {
+        return senderId;
     }
 }

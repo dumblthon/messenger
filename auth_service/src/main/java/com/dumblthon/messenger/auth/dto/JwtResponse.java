@@ -4,22 +4,16 @@ import com.dumblthon.messenger.auth.model.User;
 
 public class JwtResponse {
 
-    private User user;
-    private String deviceId;
-    private String token;
+    private final long userId;
+    private final String token;
 
-    public JwtResponse(User user, String deviceId, String token) {
-        this.user = user;
-        this.deviceId = deviceId;
+    public JwtResponse(User user, String token) {
+        this.userId = user.getId();
         this.token = token;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
+    public long getUserId() {
+        return userId;
     }
 
     public String getToken() {

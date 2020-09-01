@@ -4,7 +4,7 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 jwt:
-  secret: ${JWT_SECRET}
+  jks.pass: ${JKS_PASS}
   ttl: 604800 # 60 × 60 × 24 × 7
 otp:
   secret.length: 128

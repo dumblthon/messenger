@@ -4,9 +4,7 @@
 
     <jdbc>
         <driver>org.postgresql.Driver</driver>
-<!--        <url>jdbc:postgresql://localhost:5432/service_auth</url>-->
         <url>jdbc:postgresql://localhost:5454/test</url>
-<!--        <user>user_auth</user>-->
         <user>test</user>
         <password>test</password>
     </jdbc>

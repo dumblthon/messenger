@@ -1,6 +1,7 @@
 package com.dumblthon.messenger.auth.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class UserOtp {
 
@@ -15,6 +16,32 @@ public class UserOtp {
         this.deviceId = deviceId;
         this.code = code;
         this.sentAt = sentAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserOtp userOtp = (UserOtp) o;
+        return Objects.equals(userId, userOtp.userId) &&
+                Objects.equals(deviceId, userOtp.deviceId) &&
+                Objects.equals(code, userOtp.code) &&
+                Objects.equals(sentAt, userOtp.sentAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, deviceId, code, sentAt);
+    }
+
+    @Override
+    public String toString() {
+        return "UserOtp{" +
+                "userId=" + userId +
+                ", deviceId='" + deviceId + '\'' +
+                ", code='" + code + '\'' +
+                ", sentAt=" + sentAt +
+                '}';
     }
 
     public Long getUserId() {

@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jooq:jooq-codegen:${jooqVersion}"
+        classpath "org.jooq:jooq-meta-extensions:${jooqVersion}"
+        classpath "org.postgresql:postgresql:${postgresVersion}"
+        classpath "org.testcontainers:testcontainers:${testContainersVersion}"
+        classpath "org.testcontainers:postgresql:${testContainersVersion}"
+        classpath "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+    }
+}
+
+import liquibase.Contexts
+import liquibase.Liquibase
+import liquibase.database.Database
+import liquibase.database.DatabaseFactory
+import liquibase.database.jvm.JdbcConnection
+import liquibase.resource.FileSystemResourceAccessor
+import liquibase.resource.ResourceAccessor
+
+import org.jooq.codegen.GenerationTool
+import org.postgresql.Driver
+import org.testcontainers.containers.PostgreSQLContainer
+
+import java.nio.file.Paths
+import java.sql.Statement
+
+task jooqCodeGenXml {
+    doLast {
+        PostgreSQLContainer container = new PostgreSQLContainer<>()
+        container.setPortBindings(Collections.singletonList("5454:5432"))
+        container.withDatabaseName("test")
+        container.withUsername("test")
+        container.withPassword("test")
+
+        Statement statement = null
+        try {
+            container.start()
+
+            Properties connectionProps = new Properties()
+            connectionProps.put("user", container.getUsername())
+            connectionProps.put("password", container.getPassword())
+
+            String changelogRelPath = "liquibase/changelog/db.changelog-master.xml";
+            File baseDir = Paths.get(".").toFile();
+            ResourceAccessor resourceAccessor = new FileSystemResourceAccessor(baseDir);
+            JdbcConnection jdbcConnection = new JdbcConnection()
+            jdbcConnection.open(container.getJdbcUrl(), new Driver(), connectionProps)
+            statement = jdbcConnection.createStatement()
+            statement.execute("CREATE SCHEMA IF NOT EXISTS user_info")
+            Database database = DatabaseFactory.getInstance()
+                    .findCorrectDatabaseImplementation(jdbcConnection);
+            Liquibase liquibase = new Liquibase(changelogRelPath, resourceAccessor, database);
+            liquibase.update(new Contexts());
+
+            GenerationTool.generate(new File('jooq.xml').text)
+        } finally {
+            if (statement != null)
+                statement.close()
+            container.stop()
+        }
+    }
+}

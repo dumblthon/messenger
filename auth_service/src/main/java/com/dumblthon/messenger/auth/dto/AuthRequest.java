@@ -1,5 +1,6 @@
 package com.dumblthon.messenger.auth.dto;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class AuthRequest {
@@ -10,6 +11,7 @@ public class AuthRequest {
     @Pattern(regexp = "[0-9]{1,3}[0-9]{10}", message = "Incorrect phone number")
     private String phoneNumber;
 
+    @NotNull(message = "Empty device ID")
     private String deviceId;
 
     public String getPhoneNumber() {
@@ -18,5 +20,13 @@ public class AuthRequest {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }

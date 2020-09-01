@@ -1,10 +1,11 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/service_auth
-    username: user_auth
+    username: test
     password: test
+  liquibase.enabled: false
 jwt:
-  secret: ${JWT_SECRET}
+  jks.pass: ${JKS_PASS}
   ttl: 604800 # 60 × 60 × 24 × 7
 totp:
   secret.length: 128
