@@ -14,4 +14,13 @@
 11. Create SecretService & OtpService, rename OtpService to AuthService
 12. Logout
 13. CorsConfiguration
-14. More tests!..
+14. JWS -> JWE
+15. More tests!..
+
+keytool -genkeypair \
+  -alias messenger-jwt \
+  -keyalg RSA \
+  -keypass ... \
+  -keystore messenger-keys.jks \
+  -storepass ... \
+  -storetype pkcs12

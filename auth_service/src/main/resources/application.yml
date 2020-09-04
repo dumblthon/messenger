@@ -4,9 +4,12 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 jwt:
-  jks.pass: ${JKS_PASS}
   ttl: 604800 # 60 × 60 × 24 × 7
-otp:
-  secret.length: 128
-  code.length: 6
-  expiration.period: 5
+  issuer.url: auth_service_url
+key:
+  store:
+    file: messenger-keys.jks
+    pass: ${KEY_STORE_PASS}
+  alias: messenger-jwt
+  pass: ${KEY_PASS}
+  id: messenger-key-id

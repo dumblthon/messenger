@@ -5,16 +5,19 @@ import com.dumblthon.messenger.auth.exception.RequestValidationException;
 import com.dumblthon.messenger.auth.service.JwtService;
 import com.dumblthon.messenger.auth.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 @RestController
@@ -28,6 +31,11 @@ public class AuthController {
                           JwtService jwtService) {
         this.otpService = otpService;
         this.jwtService = jwtService;
+    }
+
+    @GetMapping("/jwks.json")
+    public Map<String, Object> keys() {
+        return jwtService.getJwkSet().toJSONObject(true);
     }
 
     @Transactional
@@ -53,7 +61,10 @@ public class AuthController {
         if (validationResponse.isSuccessful()) {
             JwtResponse response = jwtService.generateToken(
                     otpRequest.getUserId(), otpRequest.getDeviceId());
-            return ResponseEntity.ok(response);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION,
+                    "Bearer " + response.getToken());
+            return ResponseEntity.ok().headers(headers).body(response);
         } else {
             ValidationFailureResponse failureResponse = (ValidationFailureResponse) validationResponse;
             HttpStatus status = failureResponse.getReason() == ValidationFailureReason.INTERNAL_ERROR ?
