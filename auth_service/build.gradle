@@ -1,0 +1,21 @@
+apply from: 'jooq.gradle'
+
+sourceSets.main.java.srcDirs += ['build/generated/jooq/src/main/java']
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    implementation 'org.jooq:jooq'
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.nimbusds:nimbus-jose-jwt'
+
+    implementation 'javax.validation:validation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    compileOnly 'org.hibernate.validator:hibernate-validator-annotation-processor'
+
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:postgresql"
+    testImplementation "org.liquibase:liquibase-core"
+}

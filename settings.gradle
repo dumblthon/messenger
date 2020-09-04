@@ -2,3 +2,4 @@ rootProject.name = 'messenger'
 
 include 'common'
 include 'user_service'
+include 'auth_service'

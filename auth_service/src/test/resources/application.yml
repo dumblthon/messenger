@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/service_auth
+    username: test
+    password: test
+  liquibase.enabled: false
+jwt:
+  ttl: 604800 # 60 × 60 × 24 × 7
+  issuer.url: auth_service_url
+key:
+  store:
+    file: messenger-keys.jks
+    pass: messenger-keys
+  alias: messenger-jwt
+  pass: messenger-jwt
+  id: messenger-key-id

@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+jwt:
+  ttl: 604800 # 60 × 60 × 24 × 7
+  issuer.url: auth_service_url
+key:
+  store:
+    file: messenger-keys.jks
+    pass: ${KEY_STORE_PASS}
+  alias: messenger-jwt
+  pass: ${KEY_PASS}
+  id: messenger-key-id
